@@ -5,6 +5,8 @@ import { BottomNav } from "@/components/bottom-nav/bottom-nav";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { PageTransitionWrapper } from "@/components/page-transition-wrapper";
+import { RegisterSW } from "@/app/register-sw";
+import { LoadingCursor } from "@/components/loading-cursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +24,20 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Next.js',
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+  themeColor: '#000000',
 };
 
 export default async function RootLayout({
@@ -36,10 +52,19 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <RegisterSW />
+          <LoadingCursor />
           <div className="flex flex-col min-h-screen">
             <header className="p-4 bg-white shadow-md w-full">
               <div className="flex items-center justify-center max-w-md mx-auto">
