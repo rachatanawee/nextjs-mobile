@@ -3,9 +3,12 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/en'
+  
+  // Use production URL instead of origin
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nextjs-mobile-drab.vercel.app'
 
   if (code) {
     const cookieStore = await cookies()
@@ -29,10 +32,10 @@ export async function GET(request: NextRequest) {
 
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${baseUrl}${next}`)
     }
   }
 
   // Return the user to login page with error
-  return NextResponse.redirect(`${origin}/en/login?error=auth_failed`)
+  return NextResponse.redirect(`${baseUrl}/en/login?error=auth_failed`)
 }
