@@ -14,7 +14,9 @@ export default async function LoginLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <div className="fixed inset-0 z-50 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        {children}
+      </div>
     </NextIntlClientProvider>
   );
 }
