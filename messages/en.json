@@ -1,0 +1,13 @@
+{
+  "Index": {
+    "title": "Hello, World!"
+  },
+  "BottomNav": {
+    "Home": "Home",
+    "Profile": "Profile"
+  },
+  "HomePage": {
+    "title": "Welcome",
+    "description": "This is your Next.js template with internationalization support."
+  }
+}
