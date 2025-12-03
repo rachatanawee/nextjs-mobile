@@ -36,9 +36,13 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     setLoginError(null);
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      if (!baseUrl) {
+        setLoginError('Site URL is not configured');
+        return;
+      }
       const redirectUrl = `${baseUrl}/${locale}/auth/callback?next=/${locale}`;
-      
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

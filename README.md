@@ -72,10 +72,16 @@ bun install
 cp .env.example .env.local
 ```
 
-Add your Supabase credentials:
+Add your Supabase credentials and site URL:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+**For production deployment**, update `NEXT_PUBLIC_SITE_URL` to your production domain:
+```env
+NEXT_PUBLIC_SITE_URL=https://yourproductiondomain.com
 ```
 
 3. Run the development server:
