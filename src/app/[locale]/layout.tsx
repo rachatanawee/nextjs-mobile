@@ -7,6 +7,7 @@ import { getMessages } from "next-intl/server";
 import { PageTransitionWrapper } from "@/components/page-transition-wrapper";
 import { RegisterSW } from "@/app/register-sw";
 import { LoadingCursor } from "@/components/loading-cursor";
+import { ConditionalLayout } from "@/components/conditional-layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,21 +66,7 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <RegisterSW />
           <LoadingCursor />
-          <div className="flex flex-col min-h-screen">
-            <header className="p-4 bg-white shadow-md w-full">
-              <div className="flex items-center justify-center max-w-md mx-auto">
-                <h1 className="text-lg font-bold text-gray-800 text-center">
-                  Next.js Template
-                </h1>
-              </div>
-            </header>
-            <main className="flex-grow pb-16 max-w-md mx-auto w-full px-4">
-              <PageTransitionWrapper>
-                {children}
-              </PageTransitionWrapper>
-            </main>
-            <BottomNav />
-          </div>
+          <ConditionalLayout>{children}</ConditionalLayout>
         </NextIntlClientProvider>
       </body>
     </html>

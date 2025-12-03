@@ -41,13 +41,11 @@ export async function proxy(request: NextRequest) {
   const requestedPath = pathname.substring(locale.length + 1);
 
   if (!session && protectedRoutes.includes(requestedPath)) {
-    const redirectResponse = NextResponse.redirect(new URL(`${request.nextUrl.origin}/${locale}/login`));
-    return redirectResponse;
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
   if (session && requestedPath === '/login') {
-    const redirectResponse = NextResponse.redirect(new URL(`${request.nextUrl.origin}/${locale}`));
-    return redirectResponse;
+    return NextResponse.redirect(new URL(`/${locale}`, request.url));
   }
 
   // 5. Return the response from intlMiddleware, which now has the Supabase cookies.
