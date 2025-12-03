@@ -41,8 +41,8 @@ export default function Login() {
         setLoginError('Site URL is not configured');
         return;
       }
-      const redirectUrl = `${baseUrl}/${locale}/auth/callback?next=/${locale}`;
-
+      //const redirectUrl = `${baseUrl}/${locale}/auth/callback?next=/${locale}`;
+      const redirectUrl = `https://nextjs-mobile-drab.vercel.app/en/`
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
