@@ -6,8 +6,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { PageTransitionWrapper } from "@/components/page-transition-wrapper";
 import { RegisterSW } from "@/app/register-sw";
-import { LoadingCursor } from "@/components/loading-cursor";
 import { ConditionalLayout } from "@/components/conditional-layout";
+import { APP_NAME, APP_DESCRIPTION } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Template",
-  description: "Next.js Template with i18n",
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
   icons: {
     icon: '/favicon.ico',
   },
@@ -65,7 +65,6 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <RegisterSW />
-          <LoadingCursor />
           <ConditionalLayout>{children}</ConditionalLayout>
         </NextIntlClientProvider>
       </body>

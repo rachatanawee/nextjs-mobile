@@ -1,39 +1,22 @@
-'use client';
+'use client'
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
-import React from 'react';
-
-const variants = {
-  in: {
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      delay: 0.1,
-    },
-  },
-  out: {
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-    },
-  },
-};
+import { motion, AnimatePresence } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 
 export function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={pathname}
-        variants={variants}
-        initial="out"
-        animate="in"
-        exit="out"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
       >
         {children}
       </motion.div>
     </AnimatePresence>
-  );
+  )
 }

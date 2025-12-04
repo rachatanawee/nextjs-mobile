@@ -10,9 +10,18 @@
     "title": "Welcome",
     "description": "This is your Next.js template with internationalization support."
   },
+  "ProfilePage": {
+    "title": "Profile",
+    "logout": "Logout",
+    "member": "Member",
+    "email": "Email",
+    "joinedDate": "Joined Date",
+    "loginType": "Login Type",
+    "user": "User",
+    "unknown": "Unknown"
+  },
   "LoginPage": {
     "title": "Sign In",
-    "welcome": "Welcome back",
     "email": "Email",
     "password": "Password",
     "signIn": "Sign In",

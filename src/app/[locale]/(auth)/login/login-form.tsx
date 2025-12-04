@@ -4,43 +4,28 @@ import { createClient } from '@/lib/supabase/client'
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Mail, Lock, LogIn, Loader2 } from 'lucide-react'
+import { APP_NAME } from '@/lib/config'
 
 interface LoginFormProps {
-  translations: {
-    title: string
-    welcome: string
-    email: string
-    password: string
-    signIn: string
-    signingIn: string
-    or: string
-    signInWithGoogle: string
-    emailPlaceholder: string
-    passwordPlaceholder: string
-  }
+  translations: Record<string, string>
 }
 
 export function LoginForm({ translations: t }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const supabase = createClient()
   const router = useRouter()
-  const pathname = usePathname()
-  const locale = pathname.split('/')[1]
+  const locale = usePathname().split('/')[1]
 
   const handleLogin = async () => {
-    setLoginError(null)
-    setIsLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (error) {
-      setLoginError(error.message)
-      setIsLoading(false)
+    setError('')
+    setLoading(true)
+    const { error: err } = await supabase.auth.signInWithPassword({ email, password })
+    if (err) {
+      setError(err.message)
+      setLoading(false)
     } else {
       router.push(`/${locale}`)
       router.refresh()
@@ -48,109 +33,77 @@ export function LoginForm({ translations: t }: LoginFormProps) {
   }
 
   const handleGoogleLogin = async () => {
-    setLoginError(null)
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nextjs-mobile-drab.vercel.app'
-    const redirectUrl = `${baseUrl}/${locale}/auth/callback?next=/${locale}`
-    const { error } = await supabase.auth.signInWithOAuth({
+    setError('')
+    const { error: err } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: redirectUrl
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/auth/callback?next=/${locale}`
       }
     })
-
-    if (error) {
-      setLoginError(error.message)
-    }
+    if (err) setError(err.message)
   }
 
   return (
-    <>
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+    <div className="space-y-6">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <LogIn className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          {t.title}
-        </h1>
-        <p className="text-gray-600 mt-2">{t.welcome}</p>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">{APP_NAME}</h1>
+        <p className="text-gray-600">{t.title}</p>
       </div>
 
-      <form className="space-y-4">
+      <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">
-            {t.email}
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">{t.email}</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 text-sm"
-              id="email"
+              className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500"
               type="email"
               placeholder={t.emailPlaceholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">
-            {t.password}
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">{t.password}</label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 text-sm"
-              id="password"
+              className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500"
               type="password"
               placeholder={t.passwordPlaceholder}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
         </div>
 
-        {loginError && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-            <p className="text-red-600 text-sm">{loginError}</p>
-          </div>
-        )}
+        {error && <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm">{error}</div>}
 
         <button
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-sm"
-          type="button"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2.5 rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
           onClick={handleLogin}
-          disabled={isLoading}
+          disabled={loading}
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              {t.signingIn}
-            </>
-          ) : (
-            <>
-              <LogIn className="w-5 h-5" />
-              {t.signIn}
-            </>
-          )}
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
+          {loading ? t.signingIn : t.signIn}
         </button>
 
         <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">{t.or}</span>
-          </div>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t"></div></div>
+          <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-gray-500">{t.or}</span></div>
         </div>
 
         <button
-          className="w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2.5 px-4 rounded-xl border border-gray-200 transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center gap-2 text-sm"
-          type="button"
+          className="w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2.5 rounded-xl border flex items-center justify-center gap-2"
           onClick={handleGoogleLogin}
-          disabled={isLoading}
+          disabled={loading}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -160,7 +113,7 @@ export function LoginForm({ translations: t }: LoginFormProps) {
           </svg>
           {t.signInWithGoogle}
         </button>
-      </form>
-    </>
+      </div>
+    </div>
   )
 }
