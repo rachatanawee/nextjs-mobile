@@ -3,12 +3,12 @@
     "title": "สวัสดีชาวโลก!"
   },
   "BottomNav": {
-    "Home": "หน้าหลัก",
+    "Home": "หน้าแรก",
     "Profile": "โปรไฟล์"
   },
   "HomePage": {
     "title": "ยินดีต้อนรับ",
-    "description": "นี่คือ Next.js template ที่รองรับหลายภาษา"
+    "description": "นี่คือเทมเพลต Next.js ของคุณพร้อมการรองรับหลายภาษา"
   },
   "LoginPage": {
     "title": "เข้าสู่ระบบ",
