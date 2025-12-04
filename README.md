@@ -34,11 +34,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - ✅ Next.js 15 with App Router & Turbopack
 - ✅ TypeScript for type safety
 - ✅ Tailwind CSS v4 with custom design system
-- ✅ shadcn/ui components
-- ✅ Internationalization (English & Thai)
+- ✅ Internationalization (English & Thai) with language switcher
 - ✅ Supabase authentication (Google OAuth)
 - ✅ Page transitions with Framer Motion
+- ✅ Smooth loading states with skeleton screens
 - ✅ Responsive design (mobile-first)
+- ✅ Centralized app configuration
 
 ### Mobile-First Features
 - ✅ **PWA Support** - Installable app with offline capability
@@ -47,7 +48,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - ✅ **Pull-to-Refresh** - Mobile refresh pattern
 - ✅ **Safe Area Handling** - iOS notch & home indicator support
 - ✅ **Network Detection** - Online/offline status monitoring
-- ✅ **Loading States** - Skeleton screens & spinners
 - ✅ **Bottom Navigation** - Mobile-optimized navigation
 - ✅ **Bottom Sheets** - Native-like modal drawers
 - ✅ **Toast Notifications** - Mobile-friendly alerts
@@ -90,6 +90,25 @@ bun dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000)
+
+## Configuration
+
+### App Settings
+
+Edit `src/lib/config.ts` to customize your app:
+
+```typescript
+export const APP_NAME = 'My App'
+export const APP_DESCRIPTION = 'My App with i18n'
+```
+
+### Internationalization
+
+Add or edit translations in:
+- `messages/en.json` - English translations
+- `messages/th.json` - Thai translations
+
+Language switcher is available in the header on all pages.
 
 ## Mobile Features Usage
 
@@ -164,19 +183,27 @@ import { Skeleton, Sheet, Spinner, Toast } from "@/components/ui";
 src/
 ├── app/
 │   ├── [locale]/          # Internationalized routes
-│   │   ├── login/         # Login page
+│   │   ├── (auth)/        # Auth pages (login)
+│   │   ├── auth/          # Auth callback
 │   │   ├── profile/       # Profile page
-│   │   └── layout.tsx     # Root layout
+│   │   ├── layout.tsx     # Root layout
+│   │   ├── loading.tsx    # Loading state
+│   │   └── page.tsx       # Home page
 │   └── register-sw.tsx    # Service worker registration
 ├── components/
 │   ├── ui/                # Reusable UI components
 │   ├── bottom-nav/        # Bottom navigation
-│   └── examples/          # Demo components
+│   ├── conditional-layout.tsx  # Layout wrapper
+│   ├── language-switcher.tsx   # Language toggle
+│   └── page-transition-wrapper.tsx  # Page animations
 ├── hooks/                 # Custom React hooks
 ├── lib/
 │   ├── supabase/          # Supabase client
+│   ├── config.ts          # App configuration
 │   └── utils.ts           # Utility functions
 └── messages/              # i18n translations
+    ├── en.json            # English
+    └── th.json            # Thai
 
 public/
 ├── manifest.json          # PWA manifest
